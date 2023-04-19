@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify
 import werkzeug
 import predictor
+import math
 
 app = Flask(__name__)
 
 def preProcessHeader(headerData):
     headerDataList = headerData.split(")")
-    # print(headerDataList[0] +" | " + headerDataList[1] +" | " + headerDataList[2])
     dataList = []
     for item in headerDataList:
         strippedData = item.strip(",Rect.fromLTRB(")
@@ -34,7 +34,7 @@ def uploadImage():
         predictedCount = predictor.predictorModel(inputImagePath, cordListOfBbox)
 
         return jsonify({
-            "message":"Image Uploaded Successfully "
+            "message":"Image Uploaded Successfully : " + str(math.ceil(float(predictedCount)))
         })
 
 

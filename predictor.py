@@ -15,7 +15,7 @@ def predictorModel(input_image, bbox_list):
     # parser.add_argument("-i", "--input-image", type=str, required=True, help="/Path/to/input/image/file/")
     # parser.add_argument("-b", "--bbox-file", type=str, help="/Path/to/file/of/bounding/boxes")
     parser.add_argument("-o", "--output-dir", type=str, default=".", help="/Path/to/output/image/file")
-    parser.add_argument("-m",  "--model_path", type=str, default="./data/pretrainedModels/FamNet_Save1.pth", help="path to trained model")
+    parser.add_argument("-m",  "--model_path", type=str, default="./data/pretrainedModels/FamNet.pth", help="path to trained model")
     parser.add_argument("-g",  "--gpu-id", type=int, default=0, help="GPU id. Default 0 for the first GPU. Use -1 for CPU.")
 
     parser.add_argument("-a",  "--adapt", action='store_true', help="If specified, perform test time adaptation")
@@ -34,7 +34,7 @@ def predictorModel(input_image, bbox_list):
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
-    resnet50_conv = Resnet50FPN()
+    resnet50_conv = VGG16FPN()
     regressor = CountRegressor(6, pool='mean')
 
     if use_gpu:
@@ -125,7 +125,7 @@ def predictorModel(input_image, bbox_list):
     predictedCount = '{:6.2f}'.format(output.sum().item())
     print('===> The predicted count is: {:6.2f}'.format(output.sum().item()))
 
-    rslt_file = "{}/{}_out.png".format(args.output_dir, image_name)
+    rslt_file = "{}/{}_out.png".format("output_images", image_name)
     visualize_output_and_save(image.detach().cpu(), output.detach().cpu(), boxes.cpu(), rslt_file)
     print("===> Visualized output is saved to {}".format(rslt_file))
 
